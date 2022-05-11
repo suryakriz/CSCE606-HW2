@@ -1,0 +1,178 @@
+<!--  This file is app/views/movies/index.html.erb -->
+<h2>All Movies</h2>
+
+<%#  Part 2: Start here... %>
+<%= form_tag movies_path, id: "ratings_form",:method => :get do%>
+  Include:
+  <% @all_ratings.each do |rating|%>
+    <%= rating%>
+    <%= check_box_tag "ratings[#{rating}]"%>
+  <%end%>
+<%= submit_tag 'Refresh', id: "ratings_submit", :class => 'btn btn-primary'%>
+<%end %>
+
+
+<table class="table table-striped col-md-12" id="movies">
+  <thead>
+    <tr>
+      <th><%= link_to "Movie Title", movies_path(sort:"title"), id: "title_header"%> </th>
+      <th>Rating</th>
+      <th><%= link_to "Release Date", movies_path(sort: "release_date"), id: "release_date_header"%> </th>
+      <th>More Info</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @movies.each do |movie| %>
+      <tr>
+        <td>
+          <%= movie.title %>
+        </td>
+        <td>
+          <%= movie.rating %>
+        </td>
+        <td>
+          <%= movie.release_date %>
+        </td>
+        <td>
+          <%= link_to "More about #{movie.title}", movie_path(movie) %>
+        </td>
+      </tr>
+    <% end %>
+
+  </tbody>
+</table>
+<%= link_to 'Add new movie', new_movie_path, :class => 'btn btn-primary' %>
+<style>
+
+      /*.table thead th a:visited*/
+      /*{*/
+      /*    background: yellow;*/
+      /*}*/
+      .hilite a:visited {
+          background-color: yellow;
+      }
+
+</style>
+<script>
+
+</script>
+
+<!--<script>-->
+<!--  function sortTable(n) {-->
+<!--      var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;-->
+<!--      table = document.getElementById("movies");-->
+<!--      switching = true;-->
+<!--      dir = "asc";-->
+<!--      while (switching) {-->
+<!--          switching = false;-->
+<!--          rows = table.rows;-->
+<!--          for (i = 1; i < (rows.length -1); i++) {-->
+<!--              shouldSwitch = false;-->
+
+<!--              x = rows[i].getElementsByTagName("td")[n];-->
+<!--              y = rows[i + 1].getElementsByTagName("td")[n];-->
+
+<!--              if (dir == "asc") {-->
+<!--                  if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {-->
+<!--                      //if so, mark as a switch and break the loop:-->
+<!--                      shouldSwitch= true;-->
+<!--                      break;-->
+<!--                  }-->
+<!--                  // if (Number(x.innerHTML) > Number(y.innerHTML)) {-->
+<!--                  //     //if so, mark as a switch and break the loop:-->
+<!--                  //     shouldSwitch = true;-->
+<!--                  //     break;-->
+<!--                  // }-->
+<!--              }-->
+<!--              // else if (dir == "desc") {-->
+<!--              //     if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {-->
+<!--              //         //if so, mark as a switch and break the loop:-->
+<!--              //         shouldSwitch = true;-->
+<!--              //         break;-->
+<!--              //     }-->
+<!--              // }-->
+<!--          }-->
+<!--      }-->
+
+<!--      if (shouldSwitch) {-->
+<!--          /*If a switch has been marked, make the switch-->
+          and mark that a switch has been done:*/
+<!--          rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);-->
+<!--          switching = true;-->
+<!--          //Each time a switch is done, increase this count by 1:-->
+<!--          switchcount ++;-->
+<!--      }-->
+<!--      // else {-->
+<!--      //     /*If no switching has been done AND the direction is "asc",-->
+<!--      //     set the direction to "desc" and run the while loop again.*/-->
+<!--      //     if (switchcount == 0 && dir == "asc") {-->
+<!--      //         dir = "desc";-->
+<!--      //         switching = true;-->
+<!--      //     }-->
+<!--      // }-->
+<!--  }-->
+
+
+<!--  // const table = document.getElementById('movies');-->
+<!--  //-->
+<!--  // const headers = table.querySelectorAll('th');-->
+<!--  //-->
+<!--  // const tableBody = table.querySelector('tbody');-->
+<!--  // const rows = tableBody.querySelectorAll('tr');-->
+<!--  //-->
+<!--  // [].forEach.call(headers, function (header, index) {-->
+<!--  //     header.addEventListener('click', function () {-->
+<!--  //         // This function will sort the column-->
+<!--  //         sortColumn(index);-->
+<!--  //     });-->
+<!--  // });-->
+<!--  //-->
+<!--  // const transform = function (index, content) {-->
+<!--  //     // Get the data type of column-->
+<!--  //     const type = headers[index].getAttribute('data-type');-->
+<!--  //     switch (type) {-->
+<!--  //         case 'number':-->
+<!--  //             return parseFloat(content);-->
+<!--  //         case 'string':-->
+<!--  //         default:-->
+<!--  //             return content;-->
+<!--  //     }-->
+<!--  // };-->
+<!--  //-->
+<!--  // const sortColumn = function (index) {-->
+<!--  //     // Get the current direction-->
+<!--  //     const direction = directions[index] || 'asc';-->
+<!--  //-->
+<!--  //     // A factor based on the direction-->
+<!--  //     const multiplier = (direction === 'asc') ? 1 : -1;-->
+<!--  //-->
+<!--  //     const newRows = Array.from(rows);-->
+<!--  //-->
+<!--  //     newRows.sort(function (rowA, rowB) {-->
+<!--  //         const cellA = rowA.querySelectorAll('td')[index].innerHTML;-->
+<!--  //         const cellB = rowB.querySelectorAll('td')[index].innerHTML;-->
+<!--  //-->
+<!--  //         const a = transform(index, cellA);-->
+<!--  //         const b = transform(index, cellB);-->
+<!--  //-->
+<!--  //         switch (true) {-->
+<!--  //             case a > b:-->
+<!--  //                 return 1;-->
+<!--  //             case a < b:-->
+<!--  //                 return -1;-->
+<!--  //             case a === b:-->
+<!--  //                 return 0;-->
+<!--  //         }-->
+<!--  //     });-->
+<!--  //-->
+<!--  //     // Remove old rows-->
+<!--  //     [].forEach.call(rows, function (row) {-->
+<!--  //         tableBody.removeChild(row);-->
+<!--  //     });-->
+<!--  //-->
+<!--  //     // Append new row-->
+<!--  //     newRows.forEach(function (newRow) {-->
+<!--  //         tableBody.appendChild(newRow);-->
+<!--  //     });-->
+<!--  // };-->
+<!--</script>-->
